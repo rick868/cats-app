@@ -14,40 +14,28 @@
         <h2 class="app-title">The cats App</h2>
       </div>
       <div class="cats-app">
-        <div class="cats-app-facts">
+        <div class="cats-facts">
           <form action="">
-            <div class="facts-form-wrapper">
+            <div class="facts-wrapper">
               <label for="for-facts" class="for-facts"
                 >Number of cats facts (50 maximum)</label>
                 
               <div class="facts-form">
-                <input
-                  type="number"
-                  class="get-facts"
-                  name="facts-name"
-                  max="50"
-                  placeholder="number of cats facts (50 max)"
-                />
-                <button class="submit-btn" id="submit-facts-btn">Submit</button>
+                <input type="number"  class="get-facts" name="facts-name" max="50" placeholder="number of cats facts (50 max)" />
+                <button class="submit-facts-btn" id="submit-facts-btn">Submit</button>
               </div>
             </div>
           </form>
         </div>
 
-        <div class="cats-photos-wrapper">
+        <div class="cats-photos">
           <form action="">
-            <div class="photo-form-wrapper">
+            <div class="photo-wrapper">
               <label for="for-photos" class="for-photos"
                 >Number of cats Photos (10 max)</label
               >
               <div class="photo-form">
-                <input
-                  type="number"
-                  class="get-photos"
-                  name="photos-name"
-                  max="10"
-                  placeholder="number of cat photos (10max)"
-                />
+                <input type="number" class="get-photos" name="photos" max="10" placeholder="number of cat photos (10max)" />
                 <button class="submit-btn" id="submit-btn">Submit</button>
               </div>
             </div>
@@ -56,15 +44,17 @@
       </div>
     </header>
     <main>
-      <div class="cats_App_Display_info">
-        <div class="cats-facts-container">
+      <div class="cats_app_display">
+        <div class="cats_facts_container">
           <ol class="display-facts" id="display-facts"></ol>
         </div>
-        <div class="cats-photos-wrapper">
+        <div class="loading" id="loading-image"></div>
+        <div class="cats-photos">
           <div class="display-photos" id="display-photos"></div>
         </div>
       </div>
     </main>
-    <script type="module" src="/src/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>

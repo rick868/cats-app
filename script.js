@@ -1,75 +1,98 @@
-import axios from "axios";
+const factInput = document.querySelector('.get-facts');
+const photoInput = document.querySelector('.get-photos');
+const factBtn = document.getElementById('submit-facts-btn');
+const photoBtn = document.getElementById('submit-btn');
+const factList = document.getElementById('display-facts');
+const photoContainer = document.getElementById('display-photos');
+const errorMsg = document.createElement('div'); 
 
-const catFactInput = document.getElementById("cat-fact-input");
-const catPhotoInput = document.getElementById("cat-photo-input");
-const catFactBtn = document.getElementById("cat-fact-btn");
-const catPhotoBtn = document.getElementById("cat-photo-btn");
-const factPhotoDisplay = document.getElementById("factPhotoDisplay");
-const catFactList = document.getElementById("cat-list");
-const imgContainer = document.getElementById("img-container");
-const errorDisplay = document.getElementById("error");
+errorMsg.className = 'error-message';
+document.querySelector('.cats_app_display').prepend(errorMsg);
 
-async function fetchCatFacts() {
+function showLoading(){
+  loadingImage.style.display = 'block';
+  factList.style.display = 'none';
+  photoContainer.style.display = 'none';
+  errorMsg.style.display = 'none';
+  factList.innerHTML = '';
+  photoContainer.innerHTML = '';
+  errorMsg.textContent = '';
+}
+// Fetch cat facts
+async function getCatFacts() {
   try {
-    imgContainer.classList.add("d-none");
-    catFactList.classList.remove("d-none");
-    catFactList.innerHTML = "";
-    catFactList.innerHTML = `<div class="spinner"></div>`;
+
+    // Validate input
+    let factCount = factInput.value;
+    if (factCount > 50) factCount = 50;
+    if (factCount < 1) factCount = 1;
+
+    // Get facts from API
     const response = await axios.get(
-      `https://meowfacts.herokuapp.com/?count=${catFactInput.value}`,
+      `https://meowfacts.herokuapp.com/?count=${factCount}`
     );
-    let { statusText, data } = response;
-    if (statusText === "OK") {
-      if (data.data.length > 0) {
-        catFactList.innerHTML = "";
-        data.data.forEach((fact) => {
-          catFactList.innerHTML += `<li>${fact}</li>`;
-        });
-      } else {
-        errorDisplay.classList.remove("error-display");
-        errorDisplay.innerHTML = `No facts found`;
-      }
-    } else {
-      errorDisplay.classList.remove("error-display");
-    }
+    
+    // Display facts
+    factList.innerHTML = '';
+    response.data.data.forEach(fact => {
+      factList.innerHTML += `<li> ${fact}</li>`;
+    });
+    
+    // Hide error if successful
+    errorMsg.style.display = 'none';
+    
   } catch (error) {
-    // console.warn(error.response.data);
-    errorDisplay.classList.remove("error-display");
+    errorMsg.textContent = "Oops! Couldn't get cat facts. Try again later.";
+    errorMsg.style.display = 'block';
+    factList.innerHTML = '';
   }
 }
 
-async function fetchCatPhotos() {
+// Fetch cat photos
+async function getCatPhotos() {
   try {
-    catFactList.classList.add("d-none");
-    imgContainer.classList.remove("d-none");
-    imgContainer.innerHTML = "";
-    imgContainer.innerHTML = `<div class="spinner"></div>`;
+    // Show loading and hide other content
+    factList.style.display = 'none';
+    photoContainer.style.display = 'grid'; // Using grid for better photo layout
+    photoContainer.innerHTML = '<p>Loading cute cats...</p>';
+
+    // Validate input
+    let photoCount = photoInput.value;
+    if (photoCount > 10) photoCount = 10;
+    if (photoCount < 1) photoCount = 1;
+
+    // Get photos from API
     const response = await axios.get(
-      `https://api.thecatapi.com/v1/images/search?limit=${parseInt(catPhotoInput.value)}`,
+      `https://meowfacts.herokuapp.com/?count=${photoCount}`
     );
-    let { status, data } = response;
-    // console.log(data);
-    if (status === 200) {
-      if (data.length > 0) {
-        imgContainer.innerHTML = "";
-        data.forEach((photo) => {
-          let { url, width, height } = photo;
-          imgContainer.innerHTML += `
-            <img src="${url}" class="img" alt="cat pic">
-          `;
-        });
-      } else {
-        errorDisplay.classList.remove("d-none");
-        errorDisplay.innerHTML = `No cat photos found`;
-      }
-    } else {
-      errorDisplay.classList.remove("d-none");
-    }
+    
+    // Display photos
+    photoContainer.innerHTML = '';
+    response.data.forEach(cat => {
+      const img = document.createElement('img');
+      img.src = cat.url;
+      img.className = 'cat-image';
+      img.alt = 'Cute cat';
+      photoContainer.appendChild(img);
+    });
+    
+    // Hide error if successful
+    errorMsg.style.display = 'none';
+    
   } catch (error) {
-    // console.warn(error);
-    errorDisplay.classList.remove("d-none");
+    errorMsg.textContent = "Oops! Couldn't load cat photos. Try again later.";
+    errorMsg.style.display = 'block';
+    photoContainer.innerHTML = '';
   }
 }
 
-catFactBtn.addEventListener("click", fetchCatFacts);
-catPhotoBtn.addEventListener("click", fetchCatPhotos);
+// Add event listeners
+factBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  getCatFacts();
+});
+
+photoBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  getCatPhotos();
+});
